@@ -5,14 +5,14 @@ USE staff_db;
 
 CREATE TABLE department (
 
-    id INT NOT NULL,
+    id INT NOT NULL UNIQUE AUTO_INCREMEMT,
     name VARCHAR(30) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE staff_role (
 
-    role_id INT NOT NULL,
+    role_id INT NOT NULL UNIQUE AUTO_INCREMEMT,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
     department_id INT,
@@ -22,8 +22,8 @@ CREATE TABLE staff_role (
 );
 
 CREATE TABLE employee (
-    
-    employee_id INT NOT NULL,
+
+    employee_id INT NOT NULL UNIQUE AUTO_INCREMEMT,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     role_id INT,
