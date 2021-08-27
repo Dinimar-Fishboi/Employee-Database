@@ -25,3 +25,7 @@ VALUES ("Kari", "Bailey"),
        ("Lacey", "Schroeder"),
        ("Max", "Wilkins"),
        ("Marisa", "Gallegos");
+
+SELECT * FROM department;
+SELECT * FROM staff_role;
+SELECT * FROM employee;

@@ -6,6 +6,8 @@ const mysql = require('mysql2');
 const routes = require('./routes');
 const cTable = require('console.table');
 require('dotenv').config();
+require('dotenv').config({ debug: process.env.DEBUG })
+
 
 
 const PORT = process.env.PORT || 3001;
@@ -14,19 +16,34 @@ const app = express();
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(routes);
+//  UNCOMMENT THIS NEXT LINE AFTER API CONTENT IS LINKED TO INDEX AND API PAGE
+//app.use(routes);
 
 // Connect to database
 const db = mysql.createConnection(
-    process.env.DB_PASSWORD,
   {
     host: 'localhost',
     // MySQL username,
     user: 'root',
     // TODO: Add MySQL password here
-    password: DB_PASSWORD,
+    password: process.env.DB_PASSWORD,
     database: 'staff_db'
   },
   console.log(`Connected to the staff_db database.`)
 );
 
+db.query('SELECT * FROM department', function (err, results) {
+  if (err) {
+    console.error(err);
+  }
+  console.log(results);
+  console.table(results);
+});
+
+app.use((req, res) => {
+  res.status(404).end();
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
