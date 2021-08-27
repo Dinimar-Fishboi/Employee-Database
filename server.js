@@ -1,7 +1,6 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const fs = require('fs');
-// Import and require mysql2
 const mysql = require('mysql2');
 const routes = require('./routes');
 const cTable = require('console.table');
@@ -32,6 +31,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the staff_db database.`)
 );
 
+// This is the DB structure we can place in the API files
 db.query('SELECT * FROM department', function (err, results) {
   if (err) {
     console.error(err);
