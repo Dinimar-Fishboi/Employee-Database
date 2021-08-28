@@ -1,20 +1,9 @@
-SELECT employee.employee_id, staff_role.id
-FROM employee
+SELECT 
+    employee.employee_id AS id, 
+    employee.first_name, employee.last_name,
+    staff_role.role_id, staff_role.title
+FROM staff_role
 JOIN employee
-ON staff_role.role_id = employee.role_id;
+ON employee.role_id = staff_role.role_id
+ORDER BY id ASC;
 
-UPDATE employee 
-SET manager_id = 10
-WHERE role_id = 2;
-
-UPDATE employee 
-SET manager_id = 5
-WHERE role_id = 3;
-
-UPDATE employee 
-SET manager_id = 8
-WHERE role_id = 6;
-
-UPDATE employee 
-SET manager_id = 4
-WHERE role_id = 8;
