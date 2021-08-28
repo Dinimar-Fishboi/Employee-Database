@@ -32,13 +32,22 @@ const db = mysql.createConnection(
 );
 
 // This is the DB structure we can place in the API files
-db.query('SELECT * FROM department', function (err, results) {
+// db.query('SELECT * FROM department', function (err, results) {
+//   if (err) {
+//     console.error(err);
+//   }
+//   console.log(results);
+//   console.table(results);
+// });
+
+db.query('SELECT employee.employee_id AS id, employee.first_name, employee.last_name,staff_role.title, department.dept_name AS department FROM employee INNER JOIN staff_role ON employee.role_id = staff_role.role_id INNER JOIN department ON staff_role.department_id = department.id WHERE title = "Salesperson" ORDER BY id ASC;', function (err, results) {
   if (err) {
     console.error(err);
   }
   console.log(results);
   console.table(results);
 });
+
 
 app.use((req, res) => {
   res.status(404).end();
