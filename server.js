@@ -3,7 +3,7 @@ const fs = require('fs');
 const mysql = require('mysql2');
 // const {init} = require('./routes/index');
 const cTable = require('console.table');
-const {viewDept} = require('./routes/api/getData');
+//const {viewDept} = require('./routes/api/getData');
 require('dotenv').config();
 require('dotenv').config({ debug: process.env.DEBUG })
 
@@ -69,15 +69,24 @@ function init() {
     console.log(answer);
     console.log(answer.openingRequest);
 
-    db.query('SELECT * FROM department', function (err, results) {
-      if (err) {
-        console.error(err);
-      }
-      console.log()
-      console.table(results);
-    });   
+    switch (answer.openingRequest){
+      case "View all Departments":
+        viewDept();
+        break;
+  }   
+
   }))
 }
 
+function viewDept() {
+  db.query('SELECT * FROM department', function (err, results) {
+    if (err) {
+      console.error(err);
+    }
+    console.log()
+    console.table(results);
+    init()
+  }); 
+}
 
 init();
