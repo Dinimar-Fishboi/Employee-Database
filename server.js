@@ -1,22 +1,12 @@
-const express = require('express');
 const inquirer = require('inquirer');
 const fs = require('fs');
 const mysql = require('mysql2');
-const routes = require('./routes');
+// const {init} = require('./routes/index');
 const cTable = require('console.table');
+const {viewDept} = require('./routes/api/getData');
 require('dotenv').config();
 require('dotenv').config({ debug: process.env.DEBUG })
 
-
-
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-//  UNCOMMENT THIS NEXT LINE AFTER API CONTENT IS LINKED TO INDEX AND API PAGE
-//app.use(routes);
 
 // Connect to database
 const db = mysql.createConnection(
@@ -31,7 +21,6 @@ const db = mysql.createConnection(
   console.log(`Connected to the staff_db database.`)
 );
 
-// This is the DB structure we can place in the API files
 // db.query('SELECT * FROM department', function (err, results) {
 //   if (err) {
 //     console.error(err);
@@ -40,19 +29,55 @@ const db = mysql.createConnection(
 //   console.table(results);
 // });
 
-db.query('SELECT employee.employee_id AS id, employee.first_name, employee.last_name,staff_role.title, department.dept_name AS department FROM employee INNER JOIN staff_role ON employee.role_id = staff_role.role_id INNER JOIN department ON staff_role.department_id = department.id WHERE title = "Salesperson" ORDER BY id ASC;', function (err, results) {
-  if (err) {
-    console.error(err);
-  }
-  console.log(results);
-  console.table(results);
-});
+// db.query('SELECT employee.employee_id AS id, employee.first_name, employee.last_name,staff_role.title, department.dept_name AS department FROM employee INNER JOIN staff_role ON employee.role_id = staff_role.role_id INNER JOIN department ON staff_role.department_id = department.id WHERE title = "Salesperson" ORDER BY id ASC;', function (err, results) {
+//   if (err) {
+//     console.error(err);
+//   }
+//   console.log(results);
+//   console.table(results);
+// });
+
+// function init() {
+//   inquirer.prompt(openingQuestions)
+//   .then((answer => {
+//       viewDept();
+//   }))
+// }
 
 
-app.use((req, res) => {
-  res.status(404).end();
-});
+const openingQuestions = [
+  {
+      type: 'list',
+      message: 'What would you like to do?',
+      name: 'openingRequest',
+      choices: [
+          'View all Employees',
+          'Add Employee',
+          'Update Employee Role',
+          'View all Roles',
+          'Add Role',
+          'View all Departments',
+          'Add Department',
+          'Close application',
+      ],
+      }
+]
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+function init() {
+  inquirer.prompt(openingQuestions)
+  .then((answer => {
+    console.log(answer);
+    console.log(answer.openingRequest);
+
+    db.query('SELECT * FROM department', function (err, results) {
+      if (err) {
+        console.error(err);
+      }
+      console.log()
+      console.table(results);
+    });   
+  }))
+}
+
+
+init();
