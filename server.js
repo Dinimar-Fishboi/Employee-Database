@@ -17,6 +17,16 @@ const db = mysql.createConnection(
   console.log(`Connected to the staff_db database.`)
 );
 
+// Turning all departments into an array for follow up question.
+// db.query('SELECT id, dept_name AS department FROM department', function (err, results) {
+//   if (err) {
+//     console.error(err);
+//   }
+//   console.log(results)
+//   const allDept = results.map(({ id, department }) => ({ name: department, value: id}));
+//   console.log(allDept);
+// });
+
 // Ensures user enters input when required
 const confirmInput = (value) => {
   if (value){
@@ -73,14 +83,15 @@ const newRole = [
 ]
 
 //Question adding new Role to specific dept
-const newRoleToDept = [
-  {
-    type: 'choice',
-    message: ' Department this role belong to:',
-    name: 'addToDept',
-    choices: [ deptList],
-  },
-]
+// const newRoleToDept = [
+//   {
+//     type: 'choice',
+//     message: ' Department this role belong to:',
+//     name: 'addToDept',
+//     choices: ['deptList'],
+//   },
+// ]
+
 // Function that initialises app - directory to database commands.
 function init() {
   inquirer.prompt(openingQuestions)
@@ -188,22 +199,33 @@ function addRole() {
   inquirer.prompt(newRole)
   .then((answer => {
     console.log(answer);
-    console.log(answer.newTitle);
-    console.log(answer.newSalary);
-    // Need to add Dept arr here.
-    db.query('SELECT department.dept_name AS department FROM department', function (err, results) {
-      if (err) {
-        console.error(err);
-      }
-      console.log(results)
-      
-      const deptList = [];
-      for (let i = 0; i < results.length; i++){
-        deptList.push(results[i].department);
-      }
-      console.log(deptList);
-    }); 
-
+    const newTitle = answer.newTitle;
+    console.log(newTitle);
+    const newSalary = answer.newSalary;
+    console.log(newSalary);
+   
+ // Turning all departments into an array for follow up question.
+ db.query('SELECT id, dept_name AS department FROM department', function (err, results) {
+  if (err) {
+    console.error(err);
+  }
+  console.log(results)
+  const allDept = results.map(({ id, department }) => ({ name: department, value: id}));
+  console.log(allDept);
+  inquirer.prompt([
+    {
+          type: 'list',
+          message: ' Department this role belong to:',
+          name: 'addToDept',
+          choices: allDept
+        },
+  ])
+  .then((followUp => {
+    console.log(followUp);
+    const addToDept = followUp.addToDept;
+    console.log(addToDept);
+  }))
+}); 
     // console.log(answer.addToDept);
 
   //   db.query('INSERT INTO department (dept_name) VALUES ("' + answer.newDept + '")', function (err, results) {
