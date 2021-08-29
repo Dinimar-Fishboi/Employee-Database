@@ -246,10 +246,25 @@ function addEmp() {
       if (err) {
         console.error(err);
       }
-      console.table(results)
       const allRoles = results.map(({ title, id }) => ({ name: title, value: id}));
-      console.log(allRoles);
-})
+
+          // Inquiring into the new hire's role
+          inquirer.prompt([
+            {
+                  type: 'list',
+                  message: 'Role this employee has:',
+                  name: 'newHire',
+                  choices: allRoles
+                },
+          ])
+          .then((followUp => {
+            console.log(followUp);
+            const newHire = followUp.newHire;
+            console.log(newHire + firstName + lastName);
+
+          })) .catch((err) =>
+          console.error(err));
+    })
 
 }))
 .catch((err) =>
