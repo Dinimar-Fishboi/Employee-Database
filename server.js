@@ -181,7 +181,7 @@ function addDept() {
       }
       console.log("Added new department " + answer.newDept + " to system");
       init()
-  })
+   })
   }))
   .catch((err) =>
   console.error(err));
@@ -194,38 +194,36 @@ function addRole() {
     const newTitle = answer.newTitle;
     const newSalary = answer.newSalary;   
   // Turning all departments into an array for follow up question.
-  db.query('SELECT id, dept_name AS department FROM department', function (err, results) {
-    if (err) {
-      console.error(err);
-    }
-
-    // This line of code associates the Department name to the actual ID - 
-    // so the user sees the words, but the value is logged.
-    const allDept = results.map(({ id, department }) => ({ name: department, value: id}));
-
-    // Struggled to figure out how to place this in the global code: so here it is.
-    inquirer.prompt([
-      {
-            type: 'list',
-            message: ' Department this role belong to:',
-            name: 'addToDept',
-            choices: allDept
-          },
-    ])
-    .then((followUp => {
-      console.log(followUp);
-      const addToDept = followUp.addToDept;
-      console.log(addToDept + newTitle + newSalary);
-
-      // The actual line that generates the new role
-      db.query('INSERT INTO staff_role (title, salary, department_id) VALUES ("'+ newTitle + '", ' + newSalary + ', ' + addToDept +')', function (err, results) {
+      db.query('SELECT id, dept_name AS department FROM department', function (err, results) {
         if (err) {
           console.error(err);
         }
-        console.log("New role " + newTitle + " added.")
-        init()
-    }); 
-  }))
+
+        // This line of code associates the Department name to the actual ID - 
+        // so the user sees the words, but the value is logged.
+        const allDept = results.map(({ id, department }) => ({ name: department, value: id}));
+
+          // Struggled to figure out how to place this in the global code: so here it is.
+          inquirer.prompt([
+            {
+                  type: 'list',
+                  message: ' Department this role belong to:',
+                  name: 'addToDept',
+                  choices: allDept
+                },
+          ])
+            .then((followUp => {
+              const addToDept = followUp.addToDept;
+
+              // The actual line that generates the new role
+              db.query('INSERT INTO staff_role (title, salary, department_id) VALUES ("'+ newTitle + '", ' + newSalary + ', ' + addToDept +')', function (err, results) {
+                if (err) {
+                  console.error(err);
+                }
+                console.log("New role " + newTitle + " added.")
+                init()
+            }); 
+    }))
   .catch((err) =>
     console.error(err));
 }); 
@@ -262,8 +260,43 @@ function addEmp() {
             const newHire = followUp.newHire;
             console.log(newHire + firstName + lastName);
 
-          })) .catch((err) =>
-          console.error(err));
+            // Generating list of potential managers for new hire.
+            db.query('SELECT employee.employee_id AS id, employee.first_name AS first_name, employee.last_name AS last_name FROM employee', function (err, results) {
+              if (err) {
+                console.error(err);
+              }
+
+              // The array that will go into the inquire prompt.
+              const potentialManagers = results.map(({ first_name, last_name, id }) => ({ name: first_name + ' ' + last_name, value: id}));
+              potentialManagers.push({name: 'No manager', value: null})
+
+              // Final question: does the new hire have a manager?
+              inquirer.prompt([
+                {
+                      type: 'list',
+                      message: 'Manager for new employee:',
+                      name: 'addManager',
+                      choices: potentialManagers
+                    },
+              ])
+
+              .then((followUp => {
+                console.log(followUp);
+                const addManager = followUp.addManager;
+                console.log(addManager + firstName + lastName + newHire);
+                
+                db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("' + firstName +'", "'+ lastName +'",' +newHire +',' +addManager +')', function (err, results) {
+                  if (err) {
+                    console.error(err);
+                  }
+                  console.log("New hire " + firstName + " " + lastName + " added.")
+                  init()
+              }); 
+
+               }));
+           })
+        })) .catch((err) =>
+        console.error(err));
     })
 
 }))
