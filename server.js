@@ -1,9 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const mysql = require('mysql2');
-// const {init} = require('./routes/index');
 const cTable = require('console.table');
-//const {viewDept} = require('./routes/api/getData');
 require('dotenv').config();
 require('dotenv').config({ debug: process.env.DEBUG })
 
@@ -104,7 +102,8 @@ function init() {
   }   
 
   }))
-  .catch 
+  .catch((err) =>
+  console.error(err));
 }
 
 function viewDept() {
@@ -118,4 +117,7 @@ function viewDept() {
   }); 
 }
 
+
+
+// This will launch the CLI on starting the program.
 init();
