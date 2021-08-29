@@ -10,7 +10,7 @@ require('dotenv').config({ debug: process.env.DEBUG })
 const db = mysql.createConnection(
   {
     host: 'localhost',
-    user: 'root',
+    user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: 'staff_db'
   },
@@ -137,11 +137,11 @@ function init() {
 
 // Function to view all Departments
 function viewDept() {
-  db.query('SELECT * FROM department', function (err, results) {
+  db.query('SELECT id, department.dept_name AS Department FROM department', function (err, results) {
     if (err) {
       console.error(err);
     }
-    console.log('All Departments')
+    console.log('\n','All Departments','\n')
     console.table(results);
     init()
   }); 
@@ -153,7 +153,7 @@ function viewRoles() {
     if (err) {
       console.error(err);
     }
-    console.log('Roles within company')
+    console.log('\n','Roles within company','\n')
     console.table(results);
     init()
   }); 
@@ -165,7 +165,7 @@ function viewEmp() {
     if (err) {
       console.error(err);
     }
-    console.log("Employee Roster")
+    console.log('\n',"Employee Roster",'\n')
     console.table(results);
     init()
   }); 
@@ -180,7 +180,7 @@ function addDept() {
       if (err) {
         console.error(err);
       }
-      console.log("Added new department " + answer.newDept + " to system");
+      console.log('\n',"Added new department " + answer.newDept + " to system",'\n');
       init()
    })
   }))
@@ -221,7 +221,7 @@ function addRole() {
                 if (err) {
                   console.error(err);
                 }
-                console.log("New role " + newTitle + " added.")
+                console.log('\n',"New role " + newTitle + " added.", '\n')
                 init()
             }); 
     }))
@@ -286,7 +286,7 @@ function addEmp() {
                   if (err) {
                     console.error(err);
                   }
-                  console.log("New hire " + firstName + " " + lastName + " added to roster.")
+                  console.log('\n', "New hire " + firstName + " " + lastName + " added to roster.", '\n')
                   init()
               }); 
 
@@ -343,7 +343,7 @@ function updateEmp() {
                       if (err) {
                         console.error(err);
                       }
-                      console.log("Employee details have been updated")
+                      console.log('\n',"Employee details have been updated", '\n')
                       init()
                       }); 
   
