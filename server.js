@@ -123,7 +123,8 @@ function init() {
         break;
 
       case "Close application":
-        closeApp();
+        console.log('Thank you for using this application');
+        process.exit();
         break;
   }   
 
@@ -364,7 +365,9 @@ function updateEmp() {
 }
 
 function closeApp(){
-  
+  console.log('Thank you for using this application');
+  db.query('quit');
+  return;
 }
 
 init();
