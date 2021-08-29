@@ -364,10 +364,4 @@ function updateEmp() {
 
 }
 
-function closeApp(){
-  console.log('Thank you for using this application');
-  db.query('quit');
-  return;
-}
-
 init();
