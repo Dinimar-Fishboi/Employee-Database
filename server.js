@@ -22,7 +22,7 @@ const confirmInput = (value) => {
   if (value){
       return true;
   } else {
-      console.log("Please answer the question or enter a keysmash");
+      console.log("Please enter a value");
       return false;
   }
 }
@@ -56,6 +56,31 @@ const newDept = [
   }
 ]
 
+// Question asked when user selects 'Add Role'
+const newRole = [
+  {
+    type: 'input',
+    message: 'Please enter the new Role title:',
+    name: 'newTitle',
+    validate: confirmInput,
+  },
+  {
+    type: 'number',
+    message: 'Please enter the salary of this role:',
+    name: 'newSalary',
+    validate: confirmInput,
+  }
+]
+
+//Question adding new Role to specific dept
+const newRoleToDept = [
+  {
+    type: 'choice',
+    message: ' Department this role belong to:',
+    name: 'addToDept',
+    choices: [ deptList],
+  },
+]
 // Function that initialises app - directory to database commands.
 function init() {
   inquirer.prompt(openingQuestions)
@@ -158,7 +183,40 @@ function addDept() {
   console.error(err));
 }
 
+// Function to add new Role
+function addRole() {
+  inquirer.prompt(newRole)
+  .then((answer => {
+    console.log(answer);
+    console.log(answer.newTitle);
+    console.log(answer.newSalary);
+    // Need to add Dept arr here.
+    db.query('SELECT department.dept_name AS department FROM department', function (err, results) {
+      if (err) {
+        console.error(err);
+      }
+      console.log(results)
+      
+      const deptList = [];
+      for (let i = 0; i < results.length; i++){
+        deptList.push(results[i].department);
+      }
+      console.log(deptList);
+    }); 
 
+    // console.log(answer.addToDept);
+
+  //   db.query('INSERT INTO department (dept_name) VALUES ("' + answer.newDept + '")', function (err, results) {
+  //     if (err) {
+  //       console.error(err);
+  //     }
+  //     console.log("Added new department " + answer.newDept + " to system");
+  //     init()
+  // })
+  }))
+  .catch((err) =>
+  console.error(err));
+}
 
 
 // This will launch the CLI on starting the program.
