@@ -7,6 +7,10 @@
 This is a Content Management System built on a command line system; so that users can keep track of employees in their company. Users can review and update the staff database at ease.
 
 ## Deployed Link and Screenshots
+[Video Link](https://vimeo.com/594123885)
+![Screen Shot 2021-08-29 at 22 42 57](https://user-images.githubusercontent.com/83541287/131250882-1497ba98-1d55-4a0d-980b-3c2b9d9ddf4e.png)
+![Screen Shot 2021-08-29 at 22 43 47](https://user-images.githubusercontent.com/83541287/131250883-f1f64db4-d959-45a4-b29f-7ecda42ceb9c.png)
+
 
 ## Table of Contents 
 - [Technologies](#technologies)
