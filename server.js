@@ -10,15 +10,24 @@ require('dotenv').config({ debug: process.env.DEBUG })
 const db = mysql.createConnection(
   {
     host: 'localhost',
-    // MySQL username,
     user: 'root',
-    // TODO: Add MySQL password here
     password: process.env.DB_PASSWORD,
     database: 'staff_db'
   },
   console.log(`Connected to the staff_db database.`)
 );
 
+// Ensures user enters input when required
+const confirmInput = (value) => {
+  if (value){
+      return true;
+  } else {
+      console.log("Please answer the question or enter a keysmash");
+      return false;
+  }
+}
+
+// Initial question asked when opening application
 const openingQuestions = [
   {
       type: 'list',
@@ -37,12 +46,24 @@ const openingQuestions = [
       }
 ]
 
+// Question asked when user selects 'Add Department'
+const newDept = [
+  {
+    type: 'input',
+    message: 'Please enter the new Department name:',
+    name: 'newDept',
+    validate: confirmInput,
+  }
+]
+
+// Function that initialises app - directory to database commands.
 function init() {
   inquirer.prompt(openingQuestions)
   .then((answer => {
     console.log(answer);
     console.log(answer.openingRequest);
 
+    // indicates where user will go depending on choice selected
     switch (answer.openingRequest){
       case "View all Employees":
         viewEmp();
@@ -117,6 +138,27 @@ function viewEmp() {
     init()
   }); 
 }
+
+// Function to add new Department
+function addDept() {
+  inquirer.prompt(newDept)
+  .then((answer => {
+    console.log(answer);
+    console.log(answer.newDept);
+
+    db.query('INSERT INTO department (dept_name) VALUES ("' + answer.newDept + '")', function (err, results) {
+      if (err) {
+        console.error(err);
+      }
+      console.log("Added new department " + answer.newDept + " to system");
+      init()
+  })
+  }))
+  .catch((err) =>
+  console.error(err));
+}
+
+
 
 
 // This will launch the CLI on starting the program.
