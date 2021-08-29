@@ -72,6 +72,7 @@ const newRole = [
   }
 ]
 
+// Initial questions asked when user requests to add new employee
 const newEmployee = [
   {
     type: 'input',
@@ -122,6 +123,7 @@ function init() {
         addDept();
         break;
 
+      // process.exit() is a handy way to exit any Node.js app.
       case "Close application":
         console.log('Thank you for using this application');
         process.exit();
@@ -139,7 +141,7 @@ function viewDept() {
     if (err) {
       console.error(err);
     }
-    console.log()
+    console.log('All Departments')
     console.table(results);
     init()
   }); 
@@ -151,7 +153,7 @@ function viewRoles() {
     if (err) {
       console.error(err);
     }
-    console.log()
+    console.log('Roles within company')
     console.table(results);
     init()
   }); 
@@ -163,7 +165,7 @@ function viewEmp() {
     if (err) {
       console.error(err);
     }
-    console.log()
+    console.log("Employee Roster")
     console.table(results);
     init()
   }); 
@@ -173,8 +175,6 @@ function viewEmp() {
 function addDept() {
   inquirer.prompt(newDept)
   .then((answer => {
-    console.log(answer);
-    console.log(answer.newDept);
 
     db.query('INSERT INTO department (dept_name) VALUES ("' + answer.newDept + '")', function (err, results) {
       if (err) {
@@ -257,9 +257,7 @@ function addEmp() {
                 },
           ])
           .then((followUp => {
-            console.log(followUp);
             const newHire = followUp.newHire;
-            console.log(newHire + firstName + lastName);
 
             // Generating list of potential managers for new hire.
             db.query('SELECT employee.employee_id AS id, employee.first_name AS first_name, employee.last_name AS last_name FROM employee', function (err, results) {
@@ -282,15 +280,13 @@ function addEmp() {
               ])
 
               .then((followUp => {
-                console.log(followUp);
                 const addManager = followUp.addManager;
-                console.log(addManager + firstName + lastName + newHire);
                 
                 db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("' + firstName +'", "'+ lastName +'",' +newHire +',' +addManager +')', function (err, results) {
                   if (err) {
                     console.error(err);
                   }
-                  console.log("New hire " + firstName + " " + lastName + " added.")
+                  console.log("New hire " + firstName + " " + lastName + " added to roster.")
                   init()
               }); 
 
@@ -323,9 +319,7 @@ function updateEmp() {
           },
     ])
     .then((followUp => {
-      console.log(followUp);
       const chosenEmp = followUp.chosenEmp;
-      console.log(chosenEmp);
       
          // Turning the list of Roles into an array for following statements:
           db.query('SELECT staff_role.title AS title, staff_role.role_id AS id FROM staff_role', function (err, results) {
@@ -343,9 +337,7 @@ function updateEmp() {
                       },
                 ])
                 .then((followUp => {
-                  console.log(followUp);
                   const updatedRole = followUp.updatedRole;
-                  console.log(updatedRole + " " + chosenEmp);
                   
                     db.query('UPDATE employee SET role_id = "' + updatedRole + '" WHERE employee_id = "' + chosenEmp + '"', function (err, results) {
                       if (err) {
