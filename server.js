@@ -72,6 +72,21 @@ const newRole = [
   }
 ]
 
+const newEmployee = [
+  {
+    type: 'input',
+    message: "Please enter the Employee's first name:",
+    name: 'empFirstName',
+    validate: confirmInput,
+  },
+  {
+    type: 'input',
+    message: "Please enter the Employee's first name:",
+    name: 'empLastName',
+    validate: confirmInput,
+  }
+]
+
 // Function that initialises app - directory to database commands.
 function init() {
   inquirer.prompt(openingQuestions)
@@ -218,6 +233,27 @@ function addRole() {
   }))
   .catch((err) =>
   console.error(err));
+}
+
+function addEmp() {
+  inquirer.prompt(newEmployee)
+  .then((answer => {
+    const firstName = answer.empFirstName;
+    const lastName = answer.empLastName; 
+
+    // Turning the list of Roles into an array for following statements:
+    db.query('SELECT staff_role.title AS title, staff_role.role_id AS id FROM staff_role', function (err, results) {
+      if (err) {
+        console.error(err);
+      }
+      console.table(results)
+      const allRoles = results.map(({ title, id }) => ({ name: title, value: id}));
+      console.log(allRoles);
+})
+
+}))
+.catch((err) =>
+console.error(err));
 }
 
 init();
