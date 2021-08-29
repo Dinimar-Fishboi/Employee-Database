@@ -81,11 +81,11 @@ function init() {
         break;
 
       case "View all Roles":
-        viewDept();
+        viewRoles();
         break;
 
       case "Add Role":
-        viewRole();
+        addRole();
         break;
 
       case "View all Departments":
@@ -106,6 +106,7 @@ function init() {
   console.error(err));
 }
 
+// Function to view all Departments
 function viewDept() {
   db.query('SELECT * FROM department', function (err, results) {
     if (err) {
@@ -117,6 +118,29 @@ function viewDept() {
   }); 
 }
 
+// Function to view all Roles
+function viewRoles() {
+  db.query('SELECT staff_role.title AS title, staff_role.role_id AS id, department.dept_name AS department, staff_role.salary AS salary FROM staff_role INNER JOIN department ON staff_role.department_id = department.id ORDER BY id ASC', function (err, results) {
+    if (err) {
+      console.error(err);
+    }
+    console.log()
+    console.table(results);
+    init()
+  }); 
+}
+
+// Function to view all Employees
+function viewEmp() {
+  db.query('SELECT employee.employee_id AS id, employee.first_name, employee.last_name, staff_role.title, department.dept_name AS department, staff_role.salary AS salary, employee.manager_id FROM employee INNER JOIN staff_role ON employee.role_id = staff_role.role_id INNER JOIN department ON staff_role.department_id = department.id ORDER BY id ASC;', function (err, results) {
+    if (err) {
+      console.error(err);
+    }
+    console.log()
+    console.table(results);
+    init()
+  }); 
+}
 
 
 // This will launch the CLI on starting the program.
