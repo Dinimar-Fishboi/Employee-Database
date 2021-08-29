@@ -103,7 +103,7 @@ function init() {
         break;
 
       case "Update Employee Role":
-        UpdateEmp();
+        updateEmp();
         break;
 
       case "View all Roles":
@@ -302,6 +302,69 @@ function addEmp() {
 }))
 .catch((err) =>
 console.error(err));
+}
+
+// Updating employee's role.
+function updateEmp() {
+  db.query('SELECT employee.employee_id AS id, employee.first_name AS first_name, employee.last_name AS last_name FROM employee', function (err, results) {
+    if (err) {
+      console.error(err);
+    }
+
+    //Providing list of potential employees
+    const empList = results.map(({ first_name, last_name, id }) => ({ name: first_name + ' ' + last_name, value: id}));
+    inquirer.prompt([
+      {
+            type: 'list',
+            message: 'Select an employee:',
+            name: 'chosenEmp',
+            choices: empList
+          },
+    ])
+    .then((followUp => {
+      console.log(followUp);
+      const chosenEmp = followUp.chosenEmp;
+      console.log(chosenEmp);
+      
+         // Turning the list of Roles into an array for following statements:
+          db.query('SELECT staff_role.title AS title, staff_role.role_id AS id FROM staff_role', function (err, results) {
+            if (err) {
+              console.error(err);
+            }
+            const allRoles = results.map(({ title, id }) => ({ name: title, value: id}));
+
+                inquirer.prompt([
+                  {
+                        type: 'list',
+                        message: 'New role for this employee:',
+                        name: 'updatedRole',
+                        choices: allRoles
+                      },
+                ])
+                .then((followUp => {
+                  console.log(followUp);
+                  const updatedRole = followUp.updatedRole;
+                  console.log(updatedRole + " " + chosenEmp);
+                  
+                    db.query('UPDATE employee SET role_id = "' + updatedRole + '" WHERE employee_id = "' + chosenEmp + '"', function (err, results) {
+                      if (err) {
+                        console.error(err);
+                      }
+                      console.log("Employee details have been updated")
+                      init()
+                      }); 
+  
+                 }));
+             }); 
+
+         }));
+
+  })
+
+}
+
+function closeApp(){
+  
 }
 
 init();
