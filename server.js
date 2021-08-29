@@ -70,12 +70,41 @@ function init() {
     console.log(answer.openingRequest);
 
     switch (answer.openingRequest){
+      case "View all Employees":
+        viewEmp();
+        break;
+
+      case "Add Employee":
+        addEmp();
+        break;
+
+      case "Update Employee Role":
+        UpdateEmp();
+        break;
+
+      case "View all Roles":
+        viewDept();
+        break;
+
+      case "Add Role":
+        viewRole();
+        break;
+
       case "View all Departments":
         viewDept();
+        break;
+
+      case "Add Department":
+        addDept();
+        break;
+
+      case "Close application":
+        closeApp();
         break;
   }   
 
   }))
+  .catch 
 }
 
 function viewDept() {
